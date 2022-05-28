@@ -66,6 +66,16 @@ class WhatsappAPI {
                 req.rawBody = buf.toString();
             },
         }));
+        
+        this.webhookRouter.post('/', (req, res) => {
+            console.log(req.body);
+            return res.json({});
+        });
+
+        this.webhookRouter.get('/', (req, res) => {
+            console.log(req);
+            return res.json({});
+        });
 
         this.webhookRouter.get('/webhook', (req: express.Request, res: express.Response) => {            
             const mode = req.query['hub.mode'],
