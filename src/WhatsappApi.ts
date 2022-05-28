@@ -94,6 +94,8 @@ class WhatsappAPI {
             console.log('API POST')
             console.log(req.body)
             console.log(req.body.entry[0].changes)
+            console.log(req.body.entry[0].changes[0].value.messages)
+            console.log(req.body.entry[0].changes[0].value.messages[0].text)
             const hmac: crypto.Hmac = crypto.createHmac('sha1', this?.fbAppSecret || 'N/A');
             hmac.update(req.rawBody || '', 'ascii');
     
