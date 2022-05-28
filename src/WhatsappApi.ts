@@ -68,13 +68,11 @@ class WhatsappAPI {
         this.webhookRouter.use(bodyParser.json());
         
         this.webhookRouter.get('/', (req: express.Request, res: express.Response) => {
-            console.log(req);
             res.status(200).send('BATATA');
         });
 
         this.webhookRouter.post('/', (req: express.Request, res: express.Response) => {
-            console.log(req);
-            return res.json({});
+            res.json({});
         });
 
         this.webhookRouter.get('/webhook', (req: express.Request, res: express.Response) => {            
@@ -119,7 +117,7 @@ class WhatsappAPI {
             }
         });
 
-        this.expressApp.use('/whatsapp', this.webhookRouter);
+        this.expressApp.use(this.webhookRouter);
 
         if (shouldAppListen) {
             if (this.webServerSSL) {
