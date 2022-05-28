@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 import bodyParser from 'body-parser';
 import crypto from 'crypto';
 import express from 'express';
+import cors from 'cors';
 import https from 'https';
 import FormData from 'form-data';
 import fs from 'fs';
@@ -61,7 +62,9 @@ class WhatsappAPI {
             shouldAppListen = true;
         }
 
-        this.webhookRouter = express.Router().use(bodyParser.json());
+        this.webhookRouter = express.Router();
+        this.webhookRouter.use(bodyParser.json());
+        this.webhookRouter.use(cors());
         
         this.webhookRouter.post('/',  (req: express.Request, res: express.Response) => {
             console.log(req);
