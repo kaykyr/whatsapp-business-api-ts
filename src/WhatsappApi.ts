@@ -76,6 +76,7 @@ class WhatsappAPI {
         });
 
         this.webhookRouter.get('/webhook', (req: express.Request, res: express.Response) => {            
+            console.log('API GET')
             const mode = req.query['hub.mode'],
                 token = req.query['hub.verify_token'],
                 challenge = req.query['hub.challenge'];
@@ -90,6 +91,8 @@ class WhatsappAPI {
         });
 
         this.webhookRouter.post('/webhook', (req: express.Request & { rawBody?: string }, res: express.Response, next: express.NextFunction) => {
+            console.log('API POST')
+            console.log(req.body)
             const hmac: crypto.Hmac = crypto.createHmac('sha1', this?.fbAppSecret || 'N/A');
             hmac.update(req.rawBody || '', 'ascii');
     
