@@ -93,6 +93,7 @@ class WhatsappAPI {
         this.webhookRouter.post('/webhook', (req: express.Request & { rawBody?: string }, res: express.Response, next: express.NextFunction) => {
             console.log('API POST')
             console.log(req.body)
+            console.log(req.body.entry[0].changes)
             const hmac: crypto.Hmac = crypto.createHmac('sha1', this?.fbAppSecret || 'N/A');
             hmac.update(req.rawBody || '', 'ascii');
     
