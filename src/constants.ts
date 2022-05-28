@@ -1,4 +1,4 @@
-export const GraphAPIBaseUrl: string = "https://graph.facebook.com/v13.0";
+export const GraphAPIBaseUrl: string = "https://graph.facebook.com/v14.0";
 
 export enum MessageTypes {
     TEXT = "text",
