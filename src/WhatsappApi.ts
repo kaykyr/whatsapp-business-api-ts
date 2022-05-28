@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import crypto from 'crypto';
 import express from 'express';
 import cors from 'cors';
-import https from 'https';
+import https, { ServerOptions } from 'https';
 import FormData from 'form-data';
 import fs from 'fs';
 import mime from 'mime-types';
@@ -31,7 +31,7 @@ class WhatsappAPI {
     private webhookRouter?: express.Router;
     private webhookPort?: number;
     private webhookVerifyToken?: string;
-    private webServerSSL?: Object;
+    private webServerSSL?: ServerOptions;
     
     constructor(options: {
         accountPhoneNumberId: string,
@@ -41,7 +41,7 @@ class WhatsappAPI {
             port?: number,
             fbAppSecret: string,
             verifyToken: string,
-            webServerSSL?: Object,
+            webServerSSL?: ServerOptions,
         },
     }) {
         this.accountPhoneNumberId = options.accountPhoneNumberId;
@@ -56,15 +56,16 @@ class WhatsappAPI {
     }
 
     public initWebhook(callback: Function) {
-        let shouldAppListen: boolean = true;
-        // if (!this.expressApp) {
-        //     this.expressApp = express();
-        //     shouldAppListen = true;
-        // }
+        let shouldAppListen: boolean = false;
+        if (!this.expressApp) {
+            this.expressApp = express();
+            shouldAppListen = true;
+        }
 
         this.webhookRouter = express.Router();
-        this.webhookRouter.use(bodyParser.json());
+
         this.webhookRouter.use(cors());
+        this.webhookRouter.use(bodyParser.json());
         
         this.webhookRouter.get('/', (req: express.Request, res: express.Response) => {
             console.log(req);
