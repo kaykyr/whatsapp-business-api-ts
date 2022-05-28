@@ -66,14 +66,14 @@ class WhatsappAPI {
         this.webhookRouter.use(bodyParser.json());
         this.webhookRouter.use(cors());
         
-        this.webhookRouter.post('/',  (req: express.Request, res: express.Response) => {
-            console.log(req);
-            return res.json({});
-        });
-
-        this.webhookRouter.get('/',  (req: express.Request, res: express.Response) => {
+        this.webhookRouter.get('/', (req: express.Request, res: express.Response) => {
             console.log(req);
             res.status(200).send('BATATA');
+        });
+
+        this.webhookRouter.post('/', (req: express.Request, res: express.Response) => {
+            console.log(req);
+            return res.json({});
         });
 
         this.webhookRouter.get('/webhook', (req: express.Request, res: express.Response) => {            
