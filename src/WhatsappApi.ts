@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 import bodyParser from 'body-parser';
 import crypto from 'crypto';
 import express from 'express';
+import https from 'https';
 import FormData from 'form-data';
 import fs from 'fs';
 import mime from 'mime-types';
@@ -24,10 +25,12 @@ class WhatsappAPI {
     private accountPhoneNumberId: string;
     private accessToken: string;
     private expressApp?: express.Application;
+    private expressAppSSL?: any;
     private fbAppSecret?: string;
     private webhookRouter?: express.Router;
     private webhookPort?: number;
     private webhookVerifyToken?: string;
+    private webServerSSL?: Object;
     
     constructor(options: {
         accountPhoneNumberId: string,
@@ -37,6 +40,7 @@ class WhatsappAPI {
             port?: number,
             fbAppSecret: string,
             verifyToken: string,
+            webServerSSL?: Object,
         },
     }) {
         this.accountPhoneNumberId = options.accountPhoneNumberId;
@@ -46,6 +50,7 @@ class WhatsappAPI {
             this.fbAppSecret = options.webhook.fbAppSecret;
             this.webhookPort = options.webhook.port || 1337;
             this.webhookVerifyToken = options.webhook.verifyToken;
+            this.webServerSSL = options.webhook.webServerSSL;
         }
     }
 
@@ -58,14 +63,14 @@ class WhatsappAPI {
 
         this.webhookRouter = express.Router().use(bodyParser.json({
             verify(req: express.Request & { rawBody: string | Buffer }, res: express.Response, buf: Buffer) {
-              req.rawBody = buf.toString();
+                req.rawBody = buf.toString();
             },
         }));
 
         this.webhookRouter.get('/webhook', (req: express.Request, res: express.Response) => {            
             const mode = req.query['hub.mode'],
-                  token = req.query['hub.verify_token'],
-                  challenge = req.query['hub.challenge'];
+                token = req.query['hub.verify_token'],
+                challenge = req.query['hub.challenge'];
 
             if (mode && token) {
                 if (mode === 'subscribe' && token === this.webhookVerifyToken) {
@@ -107,7 +112,12 @@ class WhatsappAPI {
         this.expressApp.use('/whatsapp', this.webhookRouter);
 
         if (shouldAppListen) {
-            this.expressApp.listen(this.webhookPort, () => console.log(`Whatsapp Webhook is listening on port ${this.webhookPort}`));
+            if (this.webServerSSL) {
+                this.expressAppSSL = https.createServer(this.webServerSSL, this.expressApp);
+                this.expressAppSSL.listen(this.webhookPort, () => console.log(`Whatsapp Webhook is listening on port ${this.webhookPort}`));
+            } else {
+                this.expressApp.listen(this.webhookPort, () => console.log(`Whatsapp Webhook is listening on port ${this.webhookPort}`));
+            }
         }
     }
 
