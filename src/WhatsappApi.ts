@@ -56,11 +56,11 @@ class WhatsappAPI {
     }
 
     public initWebhook(callback: Function) {
-        let shouldAppListen: boolean = false;
-        if (!this.expressApp) {
-            this.expressApp = express();
-            shouldAppListen = true;
-        }
+        let shouldAppListen: boolean = true;
+        // if (!this.expressApp) {
+        //     this.expressApp = express();
+        //     shouldAppListen = true;
+        // }
 
         this.webhookRouter = express.Router();
         this.webhookRouter.use(bodyParser.json());
