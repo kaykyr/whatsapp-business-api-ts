@@ -61,11 +61,7 @@ class WhatsappAPI {
             shouldAppListen = true;
         }
 
-        this.webhookRouter = express.Router().use(bodyParser.json({
-            verify(req: express.Request & { rawBody: string | Buffer }, res: express.Response, buf: Buffer) {
-                req.rawBody = buf.toString();
-            },
-        }));
+        this.webhookRouter = express.Router().use(bodyParser.json());
         
         this.webhookRouter.post('/',  (req: express.Request, res: express.Response) => {
             console.log(req);
